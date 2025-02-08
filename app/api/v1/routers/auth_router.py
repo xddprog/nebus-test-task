@@ -10,7 +10,19 @@ from app.core.services.auth_service import AuthService
 router = APIRouter()
 
 
-@router.post("/register")
+@router.post(
+    "/register",
+    responses={
+        400: {
+            "description": "Organization not found",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "User already registered"}
+                }
+            }
+        }
+    }
+)
 async def register(
     form: AuthUserModel, 
     auth_service: Annotated[AuthService, Depends(get_auth_service)]
@@ -25,7 +37,18 @@ async def register(
     return await auth_service.register_user(form)
 
 
-@router.post("/login")
+@router.post(
+    "/login",
+    responses={
+        404: {
+            "content": {
+                "application/json": {
+                    "example": {"detail": "User not found"}
+                }
+            }
+        }
+    }
+)
 async def login(
     form: AuthUserModel, 
     auth_service: Annotated[AuthService, Depends(get_auth_service)]

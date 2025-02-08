@@ -49,6 +49,6 @@ class AuthService:
         if not token:
             raise AccessDenied
         
-        user = await self._get_by_token(token)
+        user = await self._get_by_token(token.credentials)
         if not user:
             raise AccessDenied

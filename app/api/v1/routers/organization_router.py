@@ -80,7 +80,19 @@ async def get_organizations_nerby(
     return await building_service.get_organizations_nearby(lat, lon, radius, limit, offset)
 
 
-@router.get("/by_name")
+@router.get(
+    "/by_name", 
+    responses={
+        404: {
+            "description": "Organization not found",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Organization not found"}
+                }
+            }
+        }
+    }
+)
 async def search_organizations(
     name: str,
     organization_service: Annotated[OrganizationService, Depends(get_organization_service)],
@@ -107,7 +119,19 @@ async def get_organizations_by_activity(
     return await organization_service.get_organizations_by_activity(activity, limit, offset)
 
 
-@router.get('/{organization_id}')
+@router.get(
+    '/{organization_id}',
+    responses={
+        404: {
+            "description": "Organization not found",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Organization not found"}
+                }
+            }
+        }
+    }
+)
 async def get_organization(
     organization_id: int,
     organization_service: Annotated[OrganizationService, Depends(get_organization_service)],

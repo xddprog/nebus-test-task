@@ -47,8 +47,13 @@ class OrganizationService:
             raise OrganizationNotFound
         return OrganizationModel.model_validate(organization, from_attributes=True)
     
-    async def get_organizations_by_activity(self, activity: str) -> list[OrganizationModel]:
-        organizations = await self.repository.get_organizations_by_activity(activity)
+    async def get_organizations_by_activity(
+        self, 
+        activity: str, 
+        limit: int, 
+        offset: int
+    ) -> list[OrganizationModel]:
+        organizations = await self.repository.get_organizations_by_activity(activity, limit, offset)
         return [
             OrganizationModel.model_validate(organization, from_attributes=True) 
             for organization in organizations

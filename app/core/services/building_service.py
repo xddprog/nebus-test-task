@@ -12,16 +12,29 @@ class BuildingService:
         xmin: float, 
         ymin: float, 
         xmax: float,
-        ymax: float
+        ymax: float,
+        limit: int,
+        offset: int
     ) -> list[OrganizationModel]:
-        organizations = await self.repository.get_organizations_within(xmin, ymin, xmax, ymax)
+        organizations = await self.repository.get_organizations_within(
+            xmin, ymin, xmax, ymax, limit, offset
+        )
         return [
             OrganizationModel.model_validate(organization, from_attributes=True) 
             for organization in organizations
         ]
     
-    async def get_organizations_nearby(self, lat: float, lon: float, radius: int) -> list[OrganizationModel]:
-        buildings = await self.repository.get_buildings_nearby(lat, lon, radius)
+    async def get_organizations_nearby(
+        self, 
+        lat: float, 
+        lon: float, 
+        radius: int,
+        limit: int,
+        offset: int
+    ) -> list[OrganizationModel]:
+        buildings = await self.repository.get_buildings_nearby(
+            lat, lon, radius, limit, offset
+        )
         return [
             OrganizationModel.model_validate(organization, from_attributes=True) 
             for building in buildings

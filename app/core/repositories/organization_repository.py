@@ -20,10 +20,12 @@ class OrganizationRepository(SqlAlchemyRepository):
         query = select(self.model).where(self.model.building_id == building_id)
         return (await self.session.execute(query)).scalars().all()
 
-    async def get_organizations_by_activity(self, activity: str) -> list[Organization]:
+    async def get_organizations_by_activity(self, activity: str, limit: int, offset: int) -> list[Organization]:
         query = (
             select(self.model)
             .where(self.model.activities.any(Activity.name == activity))
+            .limit(limit)
+            .offset(offset)
         )
         return (await self.session.execute(query)).scalars().all()
     

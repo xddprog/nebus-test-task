@@ -11,7 +11,14 @@ class BuildingRepository(SqlAlchemyRepository):
         building = await self.get_item(building_id)
         return building.organizations
     
-    async def get_buildings_nearby(self, lat: float, lon: float, radius: int) -> list[Building]:
+    async def get_buildings_nearby(
+        self, 
+        lat: float, 
+        lon: float, 
+        radius: int, 
+        limit: int, 
+        offset: int
+    ) -> list[Building]:
         distance_expr = (
             6371
             * func.acos(
@@ -26,11 +33,19 @@ class BuildingRepository(SqlAlchemyRepository):
             select(Building, distance_expr.label("distance"))
             .where(distance_expr <= radius) 
             .order_by(distance_expr)
+            .limit(limit)
+            .offset(offset)
         )
         return (await self.session.execute(query)).scalars().all()
     
     async def get_organizations_within(
-        self, xmin: float, ymin: float, xmax: float, ymax: float
+        self, 
+        xmin: float, 
+        ymin: float, 
+        xmax: float, 
+        ymax: float, 
+        limit: int, 
+        offset: int
     ) -> list[Organization]:
         query = (
             select(Organization)
@@ -41,5 +56,7 @@ class BuildingRepository(SqlAlchemyRepository):
                 Building.longitude >= xmin,
                 Building.longitude <= xmax
             )
+            .limit(limit)
+            .offset(offset)
         )
         return (await self.session.execute(query)).scalars().all()

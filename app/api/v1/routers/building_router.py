@@ -17,4 +17,11 @@ async def get_building_organizations(
         OrganizationService, Depends(get_organization_service)
     ]
 ) -> list[OrganizationModel]:
+    """
+    Fetches the list of organizations associated with a specific building.
+    Args:
+        building_id (int): The ID of the building for which to fetch organizations.
+    Returns:
+        list[OrganizationModel]: A list of organizations associated with the specified building.
+    """
     return await organization_service.get_building_organizations(building_id)

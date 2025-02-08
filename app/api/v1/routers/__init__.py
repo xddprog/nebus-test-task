@@ -15,11 +15,11 @@ all_routers.include_router(
     building_router, 
     tags=["BUILDING"], 
     prefix="/building", 
-    # dependencies=[PROTECTED]
+    dependencies=[PROTECTED]
 )
 all_routers.include_router(
     organization_router, 
     tags=["ORGANIZATION"], 
     prefix="/organization", 
-    # dependencies=[PROTECTED]
+    dependencies=[PROTECTED]
 )

@@ -24,14 +24,16 @@ class Organization(Base):
     name: Mapped[str] = mapped_column(unique=True)
     building_id: Mapped[int] = mapped_column(ForeignKey("buildings.id"), nullable=False)
 
-    building: Mapped["Building"] = relationship("Building", back_populates="organizations")
+    building: Mapped["Building"] = relationship("Building", back_populates="organizations", lazy="selectin")
     activities: Mapped[list["Activity"]] = relationship(
-        "Activity", 
-        secondary="organization_activities", 
-        back_populates="organizations"
+        back_populates="organizations",
+        secondary="organization_activities",
+        lazy="selectin"
     )
     phone_numbers: Mapped[list["OrganizationPhone"]] = relationship(
-        back_populates="organization"
+        back_populates="organization",
+        cascade="all, delete-orphan", 
+        lazy="selectin"
     )
 
 
@@ -41,26 +43,3 @@ class OrganizationActivity(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     organization_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"), nullable=False)
     activity_id: Mapped[int] = mapped_column(ForeignKey("activities.id"), nullable=False)
-
-    parent_id: Mapped[int] = mapped_column(ForeignKey("organization_activities.id"), nullable=True)
-    parent: Mapped["OrganizationActivity"] = relationship(
-        "OrganizationActivity", 
-        back_populates="childrens", 
-        remote_side=[id], 
-        lazy="selectin"
-    )
-    childrens: Mapped[list["OrganizationActivity"]] = relationship(
-        "OrganizationActivity", 
-        back_populates="parent", 
-        lazy="selectin", 
-        cascade="all, delete-orphan"
-    )
-    organization: Mapped["Organization"] = relationship(
-        "Organization", 
-        back_populates="organization_activities"
-    )
-    activity: Mapped["Activity"] = relationship(
-        "Activity", 
-        back_populates="organization_activities"
-    )
-

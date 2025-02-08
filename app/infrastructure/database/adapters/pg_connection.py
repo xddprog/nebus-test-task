@@ -1,7 +1,9 @@
+import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from app.infrastructure.config.config import DB_CONFIG
 from app.infrastructure.database.models.base import Base
+from app.utils.test_db import test_db
 
 
 class DatabaseConnection:

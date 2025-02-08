@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends
 
 from app.api.v1.dependencies import get_auth_service
 from app.core.dto.auth import AuthUserModel
+from app.core.dto.user import UserModel
 from app.core.services.auth_service import AuthService
 
 
@@ -13,7 +14,7 @@ router = APIRouter()
 async def register(
     form: AuthUserModel, 
     auth_service: Annotated[AuthService, Depends(get_auth_service)]
-) -> str:
+) -> UserModel:
     return await auth_service.register_user(form)
 
 
@@ -21,5 +22,5 @@ async def register(
 async def login(
     form: AuthUserModel, 
     auth_service: Annotated[AuthService, Depends(get_auth_service)]
-) -> str:
+) -> UserModel:
     return await auth_service.login_user(form)

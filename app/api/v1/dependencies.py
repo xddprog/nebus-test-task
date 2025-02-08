@@ -1,7 +1,7 @@
 from typing import Annotated, AsyncGenerator
 from fastapi import Depends, Request
 
-from fastapi.security import HTTPBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import app.core.repositories as repositories
@@ -28,9 +28,8 @@ async def get_auth_service(session=Depends(get_db_session)) -> services.AuthServ
 
 
 async def check_token(
-    request: Request, 
     auth_service: Annotated[services.AuthService, Depends(get_auth_service)],
-    token: str = Depends(token)
+    token: HTTPAuthorizationCredentials = Depends(token)
 ) -> None:
     return await auth_service.check_token(token)
 
